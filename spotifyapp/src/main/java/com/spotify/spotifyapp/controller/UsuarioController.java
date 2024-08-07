@@ -29,16 +29,18 @@ public class UsuarioController {
     }
 
 
-    @PostMapping("/usuarios/{usuarioId}/puntuar-cancion")
-    public ResponseEntity<PuntajeCancion> puntuarCancion(@PathVariable Long usuarioId, @RequestBody PuntajeCancion puntajeCancion) {
+    @PostMapping("/usuarios/{usuarioId}/puntuar-cancion/{cancionId}/{puntaje}")
+    public ResponseEntity<PuntajeCancion> puntuarCancion(@PathVariable Long usuarioId, @PathVariable Long cancionId, @PathVariable double puntaje) {
         Usuario usuario = usuarioService.getUsuarioById(usuarioId);
-        puntajeCancion.setUsuario(usuario);
-        Cancion cancion = cancionService.getCancionById(puntajeCancion.getCancion().getId());
-        puntajeCancion.setCancion(cancion);
-        return ResponseEntity.ok(cancionService.puntuarCancion(puntajeCancion));
+        Cancion cancion = cancionService.getCancionById(cancionId);
+
+        PuntajeCancion puntajecancion = new PuntajeCancion();
+        puntajecancion.setUsuario(usuario);
+        puntajecancion.setCancion(cancion);
+        puntajecancion.setPuntaje(puntaje);
+
+        return ResponseEntity.ok(cancionService.puntuarCancion(puntajecancion));
     }
-
-
 
     @PostMapping("/usuarios/{usuarioId}/puntuar-disco/{discoId}")
     public ResponseEntity<PuntajeDisco> puntuarDisco(
